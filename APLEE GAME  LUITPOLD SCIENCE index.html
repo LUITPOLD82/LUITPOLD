@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pac-Man Emoji - Levels & Enemy</title>
+    <style>
+        body {
+            text-align: center;
+            font-size: 40px;
+            background-color: #f0f0f0;
+        }
+        #game {
+            width: 300px;
+            height: 300px;
+            border: 2px solid black;
+            margin: auto;
+            position: relative;
+            background-color: white;
+        }
+        .player, .apple, .bacteria {
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Pac-Man Emoji 🧫</h1>
+<p>Use the arrow keys to move 🧫 and eat 🍏. Avoid 🦠!</p>
+<h2 id="level">Level: 1</h2>
+<div id="game">
+    <div id="player" class="player">🧫</div>
+    <div id="apple" class="apple">🍏</div>
+    <div id="bacteria" class="bacteria">🦠</div>
+</div>
+
+<script>
+    const player = document.getElementById("player");
+    const apple = document.getElementById("apple");
+    const bacteria = document.getElementById("bacteria");
+    const levelDisplay = document.getElementById("level");
+    
+    let x = 10, y = 10;
+    let appleX = Math.floor(Math.random() * 250) + 20;
+    let appleY = Math.floor(Math.random() * 250) + 20;
+    let bacteriaX = Math.floor(Math.random() * 250) + 20;
+    let bacteriaY = Math.floor(Math.random() * 250) + 20;
+    let level = 1;
+    let bacteriaSpeed = 1;
+
+    apple.style.left = appleX + "px";
+    apple.style.top = appleY + "px";
+    bacteria.style.left = bacteriaX + "px";
+    bacteria.style.top = bacteriaY + "px";
+    
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight" && x < 270) x += 10;
+        if (e.key === "ArrowLeft" && x > 0) x -= 10;
+        if (e.key === "ArrowUp" && y > 0) y -= 10;
+        if (e.key === "ArrowDown" && y < 270) y += 10;
+        
+        player.style.left = x + "px";
+        player.style.top = y + "px";
+
+        // Bacteria moves toward player
+        if (bacteriaX < x) bacteriaX += bacteriaSpeed;
+        if (bacteriaX > x) bacteriaX -= bacteriaSpeed;
+        if (bacteriaY < y) bacteriaY += bacteriaSpeed;
+        if (bacteriaY > y) bacteriaY -= bacteriaSpeed;
+
+        bacteria.style.left = bacteriaX + "px";
+        bacteria.style.top = bacteriaY + "px";
+
+        // Check if player reaches apple
+        if (Math.abs(x - appleX) < 20 && Math.abs(y - appleY) < 20) {
+            level++;
+            levelDisplay.innerText = "Level: " + level;
+            bacteriaSpeed += 0.5;
+
+            appleX = Math.floor(Math.random() * 250) + 20;
+            appleY = Math.floor(Math.random() * 250) + 20;
+            apple.style.left = appleX + "px";
+            apple.style.top = appleY + "px";
+        }
+
+        // Check if player touches bacteria
+        if (Math.abs(x - bacteriaX) < 20 && Math.abs(y - bacteriaY) < 20) {
+            alert("Game Over! You reached level " + level);
+            location.reload();
+        }
+    });
+</script>
+
+</body>
+</html>
